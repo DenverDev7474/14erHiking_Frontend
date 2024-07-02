@@ -4,7 +4,25 @@ import { StyleSheet, View } from 'react-native';
 import Button from './Button';
 import Input from './Input';
 
-function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
+
+interface AuthFormProps {
+  isLogin: boolean;
+  onSubmit: (credentials: any) => void;
+  credentialsInvalid: {
+    username: boolean;
+    firstName: boolean;
+    lastName: boolean;
+    city: boolean;
+    email: boolean;
+    confirmEmail: boolean;
+    password: boolean;
+    confirmPassword: boolean;
+  };
+}
+
+
+
+function AuthForm({ isLogin, onSubmit, credentialsInvalid }: AuthFormProps) {
   const [enteredUsername, setEnteredUsername ] = useState('');
   const [enteredFirstName, setEnteredFirstName] = useState('');
   const [enteredLastName, setEnteredLastName] = useState('');
@@ -42,7 +60,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
     confirmPassword: passwordsDontMatch,
   } = credentialsInvalid;
 
-  const updateInputValueHandler = (inputType, enteredValue) => {
+  const updateInputValueHandler = ({inputType, enteredValue}: {inputType: string, enteredValue: string}) => {
     switch (inputType) {
       case 'username':
         setEnteredUsername(enteredValue);
@@ -89,7 +107,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
       <View>
         <Input
           label="Username"          
-          onUpdateValue={updateInputValueHandler.bind(this, 'username')}
+          onUpdateValue={(value:string) => updateInputValueHandler('username', value)}
           value={enteredUsername}
           keyboardType="default"
           isInvalid={usernameIsInvalid}
@@ -97,7 +115,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
         {!isLogin && (
         <Input
           label="First name"
-          onUpdateValue={updateInputValueHandler.bind(this, 'firstName')}
+          onUpdateValue={(value:string) => updateInputValueHandler('firstName', value)}
           value={enteredFirstName}
           keyboardType="default"
           isInvalid={firstNameIsInvalid}

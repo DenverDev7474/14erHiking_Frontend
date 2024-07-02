@@ -1,13 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
+import {type NavigationProp } from '@react-navigation/native';
 
 import FlatButton from './FlatButton';
 import AuthForm from './AuthForm';
 
+interface Credentials {
+  username: string;
+  firstName: string;
+  lastName: string;
+  city: string;
+  email: string;
+  confirmEmail: string;
+  password: string;
+  confirmPassword: string;
+}
 
-const AuthContent = ({ isLogin, onSubmit }) => {
-  const navigation = useNavigation();
+interface AuthContentProps {
+  isLogin: boolean;
+  onSubmit: (credentials: Credentials) => void;
+  navigation: NavigationProp<any>;
+}
+
+
+const AuthContent = ({ isLogin, onSubmit, navigation }: AuthContentProps) => {
 
   const [credentialsInvalid, setCredentialsInvalid] = useState({
     username: false,
@@ -22,13 +39,13 @@ const AuthContent = ({ isLogin, onSubmit }) => {
 
   const switchAuthModeHandler = () => {
     if (isLogin) {
-      navigation.replace('Signup');
+      navigation.navigate('Signup');
     } else {
-      navigation.replace('Login');
+      navigation.navigate('Login');
     }
   }
 
-  const submitHandler = (credentials) => {
+  const submitHandler = (credentials: Credentials) => {
     let { username, firstName, lastName, city, email, confirmEmail, password, confirmPassword } = credentials;
 
     username = username.trim();
@@ -57,10 +74,19 @@ const AuthContent = ({ isLogin, onSubmit }) => {
           setCredentialsInvalid({
             username: usernameIsInvalid,
             password: passwordIsInvalid,
+            ...
           });
         } 
         else {
-            onSubmit({ username, password });
+            onSubmit({
+              username, password,
+              firstName: '',
+              lastName: '',
+              city: '',
+              email: '',
+              confirmEmail: '',
+              confirmPassword: ''
+            });
         }
     } else {
         if (usernameIsInvalid || firstNameIsInvalid || lastNameIsInvalid || cityIsInvalid || emailIsInvalid || passwordIsInvalid || !emailIsValid || !emailsAreEqual || !passwordsAreEqual) {
@@ -90,7 +116,7 @@ const AuthContent = ({ isLogin, onSubmit }) => {
       />
       <View style={styles.buttons}>
         <FlatButton onPress={switchAuthModeHandler}>
-          {isLogin ? 'Create a new account' : 'Log in instead'}
+          {isLogin ? "Don't have an account? SIGN UP" : 'Log in instead'}
         </FlatButton>
       </View>
     </View>

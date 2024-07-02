@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 const AuthStack = () => {
 
 
-  function MainScreen() {
+  function MainScreen(): JSX.Element{
     return <TabNavigator />;
   }
   
